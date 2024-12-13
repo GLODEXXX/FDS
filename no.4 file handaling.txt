@@ -1,0 +1,40 @@
+no.4 file handaling
+ps. Write a C++ program that creates an output file, writes information to it, closes the file andopen it again as an input file and read the information from the file.  
+  
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int main() {
+    string data = "Hello, this is a sample text.";
+
+    ofstream outFile("example.txt");
+    if (outFile.is_open()) {
+        outFile << data;
+        cout << "Data written to file successfully.\n";
+        outFile.close();
+    } else {
+        cout << "Error opening file for writing.\n";
+        return 1;
+    }
+
+    ifstream inFile("example.txt");
+    if (inFile.is_open()) {
+        string content;
+        getline(inFile, content);
+        cout << "Data read from file: " << content << endl;
+        inFile.close();
+    } else {
+        cout << "Error opening file for reading.\n";
+        return 1;
+    }
+
+    return 0;
+}
+
+op:-
+Data written to file successfully.
+Data read from file: Hello, this is a sample text.
+

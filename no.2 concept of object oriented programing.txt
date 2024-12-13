@@ -1,0 +1,125 @@
+no.2 concept of object oriented programing
+
+ps.Develop an object oriented program in C++ to create a database of student information system containing the following information: Name, Roll number, Class, division, Date of Birth, Blood group, Contact address, telephone number, driving license no. and other Construct the database with suitable member functions for initializing and destroying the data viz constructor, default constructor, Copy constructor, destructor, static member functions, friend class, this pointer, inline code and dynamic memory allocation operators-new and delete  
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Student {
+    string name, dob, bloodGroup, contactAddress, drivingLicense;
+    int rollNumber, classNumber;
+    char division;
+    long long phone;
+
+    static int count; 
+
+public:
+    
+    Student() : name(""), dob(""), bloodGroup(""), contactAddress(""),
+                drivingLicense(""), rollNumber(0), classNumber(0),
+                division('A'), phone(0) {
+        ++count;
+    }
+
+    Student(string n, int roll, int cls, char div, string d, string bg,
+            string addr, long long ph, string dl)
+        : name(n), rollNumber(roll), classNumber(cls), division(div),
+          dob(d), bloodGroup(bg), contactAddress(addr), phone(ph),
+          drivingLicense(dl) {
+        ++count;
+    }
+
+    Student(const Student& s)
+        : name(s.name), rollNumber(s.rollNumber), classNumber(s.classNumber),
+          division(s.division), dob(s.dob), bloodGroup(s.bloodGroup),
+          contactAddress(s.contactAddress), phone(s.phone),
+          drivingLicense(s.drivingLicense) {
+        ++count;
+    }
+
+    ~Student() {
+        --count;
+    }
+
+    static int getStudentCount() {
+        return count;
+    }
+
+    void display() const {
+        cout << "Name: " << name << "\nRoll Number: " << rollNumber
+             << "\nClass: " << classNumber << "\nDivision: " << division
+             << "\nDate of Birth: " << dob << "\nBlood Group: " << bloodGroup
+             << "\nContact Address: " << contactAddress
+             << "\nPhone: " << phone
+             << "\nDriving License: " << drivingLicense << endl;
+    }
+
+    inline void updateName(const string& newName) {
+        this->name = newName;
+    }
+
+    friend void showSummary(const Student& s);
+};
+
+int Student::count = 0;
+
+void showSummary(const Student& s) {
+    cout << "Student Summary -> Name: " << s.name
+         << ", Roll Number: " << s.rollNumber << endl;
+}
+
+int main() {
+   
+    Student* s1 = new Student("John Doe", 101, 10, 'A', "01/01/2005", "O+",
+                               "123 Street, City", 9876543210, "DL123456");
+    Student s2("Jane Doe", 102, 10, 'B', "02/02/2005", "A+",
+               "456 Avenue, City", 9876543211, "DL654321");
+
+    cout << "Student Count: " << Student::getStudentCount() << endl;
+
+    s1->display();
+    s2.display();
+
+    s1->updateName("John Smith");
+    cout << "\nAfter updating name:" << endl;
+    s1->display();
+
+    cout << "\nSummary of student 2:" << endl;
+    showSummary(s2);
+
+    delete s1;
+
+    cout << "\nStudent Count after deletion: " << Student::getStudentCount() << endl;
+
+    return 0;
+}
+
+outpute:-
+Student Count: 2
+Name: John Doe
+Roll Number: 101
+Class: 10
+Division: A
+Date of Birth: 01/01/2005
+Blood Group: O+
+Contact Address: 123 Street, City
+Phone: 9876543210
+Driving License: DL123456
+
+Name: Jane Doe
+Roll Number: 102
+Class: 10
+Division: B
+Date of Birth: 02/02/2005
+Blood Group: A+
+Contact Address: 456 Avenue, City
+Phone: 9876543211
+Driving License: DL654321
+
+After updating name:
+Name: John Smith
+...
+
+Student Count after deletion: 1
+

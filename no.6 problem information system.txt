@@ -1,0 +1,78 @@
+n0.6 problem information system using sorting for STL and vector
+ps. write c++ program using STL for sorting and searching user define record such as personalrecords (name ,DOB,templatene number ets) using vector container
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+// Structure for Personal Record
+struct PersonalRecord {
+    string name;
+    string dob;        // Date of Birth
+    string phone;
+
+    // Overload < operator for sorting by name
+    bool operator<(const PersonalRecord& other) const {
+        return name < other.name;
+    }
+};
+
+// Function to display records (only name and phone)
+void displayRecords(const vector<PersonalRecord>& records) {
+    for (const auto& record : records) {
+        cout << "Name: " << record.name << ", Phone: " << record.phone << endl;
+    }
+}
+
+int main() {
+    vector<PersonalRecord> records;
+    int n;
+
+    // Input records
+    cout << "Enter number of records: ";
+    cin >> n;
+    for (int i = 0; i < n; ++i) {
+        PersonalRecord record;
+        cout << "Enter name, DOB (dd/mm/yyyy), and phone for record " << i + 1 << ":\n";
+        cin >> record.name >> record.dob >> record.phone;
+        records.push_back(record);
+    }
+
+    // Sort records by name
+    sort(records.begin(), records.end());
+    cout << "\nSorted Records (Name and Phone only):\n";
+    displayRecords(records);
+
+    // Search for a record by name
+    string searchName;
+    cout << "\nEnter name to search: ";
+    cin >> searchName;
+    auto it = find_if(records.begin(), records.end(), [&](const PersonalRecord& r) {
+        return r.name == searchName;
+    });
+
+    if (it != records.end()) {
+        cout << "Record Found: Name: " << it->name
+             << ", Phone: " << it->phone << endl;
+    } else {
+        cout << "Record not found.\n";
+    }
+
+    return 0;
+}
+op:-Enter number of records: 3
+Enter name, DOB (dd/mm/yyyy), and phone for record 1:
+Alice 01/01/1990 1234567890
+Enter name, DOB (dd/mm/yyyy), and phone for record 2:
+Bob 02/02/1995 9876543210
+Enter name, DOB (dd/mm/yyyy), and phone for record 3:
+Charlie 03/03/2000 5555555555
+
+Sorted Records (Name and Phone only):
+Name: Alice, Phone: 1234567890
+Name: Bob, Phone: 9876543210
+Name: Charlie, Phone: 5555555555
+
+Enter name to search: Bob
+Record Found: Name: Bob, Phone: 9876543210

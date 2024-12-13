@@ -1,0 +1,142 @@
+no.3 demonstrate reausability of code
+ps.Imagine a publishing company which does marketing for book and audio cassette versions. Create a class publication that stores the title (a string) and price (type float) of a publication. From this class derive two classes: book, which adds a page count (type int), and tape, which adds a playing time in minutes (type float). Write a program that instantiates the book and tape classes, allows user to enter data and displays the data members. If an exception is caught, replace all the data member values with zero values   
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Publication {
+protected:
+    string title;
+    float price;
+
+public:
+    Publication() : title(""), price(0.0) {}
+
+    virtual void input() {
+        cout << "Enter title: ";
+        cin.ignore();
+        getline(cin, title);
+        cout << "Enter price: ";
+        cin >> price;
+        if (price < 0) throw invalid_argument("Price cannot be negative!");
+    }
+
+    virtual void display() const {
+        cout << "Title: " << title << "\nPrice: " << price << endl;
+    }
+
+    virtual void reset() {
+        title = "";
+        price = 0.0;
+    }
+
+    virtual ~Publication() {}
+};
+
+class Book : public Publication {
+    int pageCount;
+
+public:
+    Book() : pageCount(0) {}
+
+    void input() override {
+        try {
+            Publication::input();
+            cout << "Enter page count: ";
+            cin >> pageCount;
+            if (pageCount < 0) throw invalid_argument("Page count cannot be negative!");
+        } catch (...) {
+            reset();
+            throw;
+        }
+    }
+
+    void display() const override {
+        Publication::display();
+        cout << "Page Count: " << pageCount << endl;
+    }
+
+    void reset() override {
+        Publication::reset();
+        pageCount = 0;
+    }
+};
+
+class Tape : public Publication {
+    float playTime;
+
+public:
+    Tape() : playTime(0.0) {}
+
+    void input() override {
+        try {
+            Publication::input();
+            cout << "Enter play time (in minutes): ";
+            cin >> playTime;
+            if (playTime < 0) throw invalid_argument("Play time cannot be negative!");
+        } catch (...) {
+            reset();
+            throw;
+        }
+    }
+
+    void display() const override {
+        Publication::display();
+        cout << "Play Time: " << playTime << " minutes" << endl;
+    }
+
+    void reset() override {
+        Publication::reset();
+        playTime = 0.0;
+    }
+};
+
+int main() {
+    Book book;
+    Tape tape;
+
+    try {
+        cout << "Enter details for book:\n";
+        book.input();
+    } catch (const exception& e) {
+        cout << "Error: " << e.what() << ". Resetting book data.\n";
+    }
+    cout << "\nBook Details:\n";
+    book.display();
+
+    try {
+        cout << "\nEnter details for tape:\n";
+        tape.input();
+    } catch (const exception& e) {
+        cout << "Error: " << e.what() << ". Resetting tape data.\n";
+    }
+    cout << "\nTape Details:\n";
+    tape.display();
+
+    return 0;
+}
+
+op:-
+Enter details for book:
+Enter title: C++ Programming
+Enter price: -100
+Error: Price cannot be negative!. Resetting book data.
+
+Book Details:
+Title: 
+Price: 0
+Page Count: 0
+
+Enter details for tape:
+Enter title: Audio Learning
+Enter price: 50
+Enter play time (in minutes): -30
+Error: Play time cannot be negative!. Resetting tape data.
+
+Tape Details:
+Title: 
+Price: 0
+Play Time: 0 minutes
+
